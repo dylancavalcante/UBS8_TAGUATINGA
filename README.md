@@ -86,8 +86,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Backend rodando em: http://127.0.0.1:8000
-Documentação Swagger: http://127.0.0.1:8000/docs
+Backend rodando em: http://127.0.0.1:8000 | Documentação Swagger: http://127.0.0.1:8000/docs
 
 ### Frontend
 
@@ -112,7 +111,7 @@ Frontend rodando em: http://localhost:5173
 
 ---
 
-## 📖 Objetivo do Projeto
+## Objetivo do Projeto
 
 Este projeto foi desenvolvido com foco em aprendizado prático de:
 
