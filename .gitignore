@@ -1,0 +1,16 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Banco SQLite
+*.db
+
+# Node
+node_modules/
+
+# Vite
+dist/
+
+# Env
+.env
