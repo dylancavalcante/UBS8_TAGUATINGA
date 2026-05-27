@@ -14,11 +14,18 @@ import Banner from '../components/Banner';
 import PostCard from '../components/PostCard';
 import Button from '../components/Button';
 import ubs8_banner from '../assets/ubs8_banner.png';
-import { useEffect, useState } from 'react';
-import api from '../services/api';
 
+// Importações do Swiper
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay, EffectCards } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-cards';
 
-// Adicionamos as propriedades bg e text para os serviços!
+// comentando a api para resolver problema de requisições falhas 
+// import { useEffect, useState } from 'react';
+// import api from '../services/api';
+
 const servicos = [
   { icon: Stethoscope, titulo: 'Consultas Médicas', descricao: 'Atendimento clínico geral e especializado', bg: 'bg-blue-100', text: 'text-blue-600' },
   { icon: Heart, titulo: 'Saúde da Família', descricao: 'Acompanhamento integral da saúde familiar', bg: 'bg-rose-100', text: 'text-rose-600' },
@@ -27,26 +34,45 @@ const servicos = [
 ];
 
 const Home = () => {
-  const [publicacoesRecentes, setPublicacoesRecentes] = useState([]);
-  useEffect(() => {
 
-  async function carregarPublicacoes() {
-
-    try {
-
-      const response = await api.get("/publicacoes")
-
-      setPublicacoesRecentes(response.data)
-
-    } catch (error) {
-
-      console.error("Erro ao buscar publicações:", error)
+  // dados fakes, remover dps
+  const publicacoesRecentes = [
+    {
+      publicacao_id: 1,
+      titulo: 'Campanha de Vacinação',
+      resumo: 'Participe da campanha de vacinação da UBS.',
+      imagem_url: 'https://placehold.co/600x400',
+      data_publicacao: '2026-05-27'
+    },
+    {
+      publicacao_id: 2,
+      titulo: 'Grupo de Apoio',
+      resumo: 'Novo grupo de apoio disponível para a comunidade.',
+      imagem_url: 'https://placehold.co/600x400',
+      data_publicacao: '2026-05-26'
+    },
+    {
+      publicacao_id: 3,
+      titulo: 'Horta Medicinal',
+      resumo: 'Conheça as novas plantas medicinais da UBS.',
+      imagem_url: 'https://placehold.co/600x400',
+      data_publicacao: '2026-05-25'
     }
-  }
+  ];
 
-  carregarPublicacoes()
+  /* const [publicacoesRecentes, setPublicacoesRecentes] = useState([]);
+  useEffect(() => {
+    async function carregarPublicacoes() {
+      try {
+        const response = await api.get("/publicacoes")
+        setPublicacoesRecentes(response.data)
+      } catch (error) {
+        console.error("Erro ao buscar publicações:", error)
+      }
+    }
+    carregarPublicacoes()
+  }, []) */
 
-}, [])
   return (
     <main>
       {/* Banner Principal */}
@@ -95,7 +121,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Nossos Serviços */}
+      {/* Nossos Serviços com Swiper */}
       <section className="py-16 bg-neutral-50">
         <div className="container-ubs">
           <div className="text-center mb-12">
@@ -107,18 +133,30 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            spaceBetween={24}
+            slidesPerView={1}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 4 },
+            }}
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 3000, disableOnInteraction: false }}
+            className="pb-12" // Espaço para as bolinhas de paginação
+          >
             {servicos.map((servico, index) => (
-              <div key={index} className="card text-center hover:shadow-md transition-shadow">
-                {/* Aplicamos as cores dinâmicas aqui! */}
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 ${servico.bg}`}>
-                  <servico.icon className={`w-7 h-7 ${servico.text}`} />
+              <SwiperSlide key={index} className="h-auto">
+                <div className="card h-full flex flex-col items-center text-center hover:shadow-xl transition-all duration-300 border-t-4 border-t-transparent hover:border-t-primary-500 cursor-grab active:cursor-grabbing">
+                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-inner ${servico.bg}`}>
+                    <servico.icon className={`w-8 h-8 ${servico.text}`} />
+                  </div>
+                  <h3 className="font-bold text-neutral-900 mb-3 text-lg">{servico.titulo}</h3>
+                  <p className="text-sm text-neutral-600 leading-relaxed">{servico.descricao}</p>
                 </div>
-                <h3 className="font-semibold text-neutral-900 mb-2">{servico.titulo}</h3>
-                <p className="text-sm text-neutral-600">{servico.descricao}</p>
-              </div>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
 
           <div className="text-center mt-8">
             <Link to="/projetos">

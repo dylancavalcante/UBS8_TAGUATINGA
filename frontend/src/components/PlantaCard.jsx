@@ -1,16 +1,22 @@
 import { Leaf } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const PlantaCard = ({ planta, onClick }) => {
   const { nome, nomeCientifico, imagem, efeitosMedicinais } = planta;
 
   return (
-    <article 
-      className="card overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+    <motion.article 
+      whileHover={{ y: -10, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="card overflow-hidden bg-white hover:shadow-2xl hover:shadow-secondary-500/20 transition-all duration-300 cursor-pointer border border-transparent hover:border-secondary-200"
       onClick={onClick}
     >
-      <div className="relative h-40 -mx-6 -mt-6 mb-4 bg-secondary-50">
+      {/* Fundo sutil do card usando sua paleta */}
+      <div className="relative h-48 -mx-6 -mt-6 mb-4 bg-secondary-50 overflow-hidden">
         {imagem ? (
-          <img 
+          <motion.img 
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.4 }}
             src={imagem} 
             alt={nome}
             className="w-full h-full object-cover"
@@ -22,28 +28,32 @@ const PlantaCard = ({ planta, onClick }) => {
         )}
       </div>
       
-      <h3 className="text-lg font-semibold text-neutral-900">{nome}</h3>
+      {/* Título com gradiente verde elegante */}
+      <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary-700 to-secondary-500">
+        {nome}
+      </h3>
       
       {nomeCientifico && (
-        <p className="text-sm text-neutral-500 italic mb-2">{nomeCientifico}</p>
+        <p className="text-sm text-neutral-500 italic mb-3">{nomeCientifico}</p>
       )}
       
       <div className="flex flex-wrap gap-1 mt-3">
+        {/* Tags com verde suave (Comentário movido para cá!) */}
         {efeitosMedicinais?.slice(0, 3).map((efeito, index) => (
           <span 
             key={index}
-            className="px-2 py-1 bg-secondary-100 text-secondary-700 text-xs rounded-full"
+            className="px-2 py-1 bg-secondary-100 text-secondary-800 text-xs font-medium rounded-full border border-secondary-200"
           >
             {efeito}
           </span>
         ))}
         {efeitosMedicinais?.length > 3 && (
-          <span className="px-2 py-1 bg-neutral-100 text-neutral-600 text-xs rounded-full">
+          <span className="px-2 py-1 bg-neutral-100 text-neutral-600 text-xs font-medium rounded-full border border-neutral-200">
             +{efeitosMedicinais.length - 3}
           </span>
         )}
       </div>
-    </article>
+    </motion.article>
   );
 };
 
