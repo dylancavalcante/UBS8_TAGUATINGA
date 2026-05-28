@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Leaf, Info, X } from 'lucide-react';
+import { Search, Leaf, X } from 'lucide-react';
 
 import Banner from '../components/Banner';
 import PlantaCard from '../components/PlantaCard';
@@ -21,7 +21,7 @@ const Horta = () => {
 
       try {
 
-        const response = await api.get('/horta');
+        const response = await api.get('/horta/');
 
         setPlantas(response.data);
 
@@ -37,7 +37,7 @@ const Horta = () => {
 
   }, []);
 
-  const plantasFiltradas = plantas.filter(planta => {
+  const plantasFiltradas = plantas.filter((planta) => {
 
     const nome =
       planta.nome?.toLowerCase() || '';
@@ -52,22 +52,30 @@ const Horta = () => {
 
   });
 
+  // URL COMPLETA DA IMAGEM DO MODAL
+  const imagemSelecionada =
+    plantaSelecionada?.imagem_horta_url
+      ? `http://localhost:8000${plantaSelecionada.imagem_horta_url}`
+      : null;
+
   return (
+
     <main className="bg-neutral-50 min-h-screen pb-16 overflow-hidden">
 
       <div className="relative z-0">
+
         <Banner
           title="Horta: Raízes do cuidar"
           image={horta}
           subtitle="Conheça as plantas medicinais cultivadas na UBS e seus benefícios para a saúde."
         />
-      </div>
 
-      {/* resto do layout continua igual */}
+      </div>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 relative z-20">
 
         {/* busca */}
+
         <div className="max-w-2xl mx-auto -mt-8 md:-mt-14 relative mb-12">
 
           <div className="relative shadow-xl rounded-full bg-white border border-neutral-100">
@@ -87,29 +95,14 @@ const Horta = () => {
         </div>
 
         {/* grid */}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
           {plantasFiltradas.map((planta) => (
 
             <PlantaCard
               key={planta.horta_id}
-              planta={{
-                ...planta,
-
-                id: planta.horta_id,
-
-                nomeCientifico: planta.nome_cientifico,
-
-                efeitosMedicinais:
-                  planta.efeitos
-                    ? planta.efeitos.split(',')
-                    : [],
-
-                modoDeUso: planta.modo_de_uso,
-
-                imagem:
-                  planta.imagem_horta_url
-              }}
+              planta={planta}
               onClick={() => setPlantaSelecionada(planta)}
             />
 
@@ -120,6 +113,7 @@ const Horta = () => {
       </section>
 
       {/* modal */}
+
       {plantaSelecionada && (
 
         <div
@@ -132,12 +126,12 @@ const Horta = () => {
             onClick={(e) => e.stopPropagation()}
           >
 
-            <div className="relative h-56 bg-green-50">
+            <div className="relative h-56 bg-green-50 overflow-hidden">
 
-              {plantaSelecionada.imagem_horta_url ? (
+              {imagemSelecionada ? (
 
                 <img
-                  src={plantaSelecionada.imagem_horta_url}
+                  src={imagemSelecionada}
                   alt={plantaSelecionada.nome}
                   className="w-full h-full object-cover"
                 />
@@ -145,16 +139,20 @@ const Horta = () => {
               ) : (
 
                 <div className="w-full h-full flex items-center justify-center">
+
                   <Leaf className="w-20 h-20 text-green-200" />
+
                 </div>
 
               )}
 
               <button
                 onClick={() => setPlantaSelecionada(null)}
-                className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center"
+                className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow"
               >
+
                 <X className="w-5 h-5" />
+
               </button>
 
             </div>
@@ -162,11 +160,15 @@ const Horta = () => {
             <div className="p-8">
 
               <h2 className="text-3xl font-bold text-neutral-900 mb-1">
+
                 {plantaSelecionada.nome}
+
               </h2>
 
               <p className="text-[#0d4f28] italic mb-6 text-lg">
+
                 {plantaSelecionada.nome_cientifico}
+
               </p>
 
               <div className="flex flex-wrap gap-2 mb-8">
@@ -179,7 +181,9 @@ const Horta = () => {
                       key={index}
                       className="px-4 py-1.5 bg-green-100 text-[#0d4f28] font-medium text-sm rounded-full"
                     >
+
                       {efeito.trim()}
+
                     </span>
 
                   ))}
@@ -189,23 +193,33 @@ const Horta = () => {
               <div className="space-y-6">
 
                 <div>
+
                   <h3 className="text-lg font-bold text-neutral-900 mb-2">
+
                     Descrição
+
                   </h3>
 
                   <p className="text-neutral-600 leading-relaxed">
+
                     {plantaSelecionada.descricao}
+
                   </p>
+
                 </div>
 
                 <div className="bg-neutral-50 p-5 rounded-xl border border-neutral-100">
 
                   <h3 className="text-lg font-bold text-neutral-900 mb-2">
+
                     Modo de Uso
+
                   </h3>
 
                   <p className="text-neutral-600 leading-relaxed">
+
                     {plantaSelecionada.modo_de_uso}
+
                   </p>
 
                 </div>
@@ -213,11 +227,15 @@ const Horta = () => {
                 <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-xl">
 
                   <h3 className="text-lg font-bold text-red-800 mb-2">
+
                     Contraindicações
+
                   </h3>
 
                   <p className="text-red-700 leading-relaxed">
+
                     {plantaSelecionada.contraindicacoes}
+
                   </p>
 
                 </div>
@@ -233,7 +251,9 @@ const Horta = () => {
       )}
 
     </main>
+
   );
+
 };
 
 export default Horta;

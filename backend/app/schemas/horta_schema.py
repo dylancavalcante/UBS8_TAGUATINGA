@@ -15,6 +15,6 @@ class HortaCreate(BaseModel):
 
     efeitos: str
 
-    imagem_horta_url: str
+    imagem_horta_url: str | None = None
 
-    admin_id: int
+    #admin_id: int

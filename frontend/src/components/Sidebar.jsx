@@ -11,10 +11,8 @@ import {
 const Sidebar = ({ onLogout }) => {
   const menuItems = [
     { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
-    { to: '/admin/posts', icon: FileText, label: 'Publicações' },
     { to: '/admin/criar-post', icon: PlusCircle, label: 'Nova Publicação' },
     { to: '/admin/horta', icon: Leaf, label: 'Gerenciar Horta' },
-    { to: '/admin/configuracoes', icon: Settings, label: 'Configurações' },
   ];
 
   const linkStyles = ({ isActive }) => 

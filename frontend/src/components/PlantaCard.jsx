@@ -1,60 +1,151 @@
 import { Leaf } from 'lucide-react';
+
 import { motion } from 'framer-motion';
 
 const PlantaCard = ({ planta, onClick }) => {
-  const { nome, nomeCientifico, imagem, efeitosMedicinais } = planta;
+
+  const {
+    nome,
+    nome_cientifico,
+    imagem_horta_url,
+    efeitos
+  } = planta;
+
+  const efeitosMedicinais =
+    efeitos
+      ? efeitos.split(',')
+      : [];
+
+  // URL COMPLETA DA IMAGEM
+  const imagemUrl = imagem_horta_url
+    ? `http://localhost:8000${imagem_horta_url}`
+    : null;
 
   return (
-    <motion.article 
-      whileHover={{ y: -10, scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="card overflow-hidden bg-white hover:shadow-2xl hover:shadow-secondary-500/20 transition-all duration-300 cursor-pointer border border-transparent hover:border-secondary-200"
+
+    <motion.article
+      whileHover={{ y: -6 }}
+      transition={{
+        type: 'spring',
+        stiffness: 250,
+        damping: 18
+      }}
+      className="
+        bg-white
+        rounded-3xl
+        overflow-hidden
+        shadow-sm
+        hover:shadow-xl
+        transition-all
+        duration-300
+        cursor-pointer
+        border
+        border-neutral-100
+      "
       onClick={onClick}
     >
-      {/* Fundo sutil do card usando sua paleta */}
-      <div className="relative h-48 -mx-6 -mt-6 mb-4 bg-secondary-50 overflow-hidden">
-        {imagem ? (
-          <motion.img 
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.4 }}
-            src={imagem} 
+
+      {/* imagem */}
+
+      <div className="relative h-52 bg-secondary-50 overflow-hidden">
+
+        {imagemUrl ? (
+
+          <img
+            src={imagemUrl}
             alt={nome}
-            className="w-full h-full object-cover"
+            className="
+              w-full
+              h-full
+              object-cover
+            "
           />
+
         ) : (
+
           <div className="w-full h-full flex items-center justify-center">
-            <Leaf className="w-12 h-12 text-secondary-300" />
+
+            <Leaf className="w-14 h-14 text-secondary-300" />
+
           </div>
+
         )}
+
       </div>
-      
-      {/* Título com gradiente verde elegante */}
-      <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-secondary-700 to-secondary-500">
-        {nome}
-      </h3>
-      
-      {nomeCientifico && (
-        <p className="text-sm text-neutral-500 italic mb-3">{nomeCientifico}</p>
-      )}
-      
-      <div className="flex flex-wrap gap-1 mt-3">
-        {/* Tags com verde suave (Comentário movido para cá!) */}
-        {efeitosMedicinais?.slice(0, 3).map((efeito, index) => (
-          <span 
-            key={index}
-            className="px-2 py-1 bg-secondary-100 text-secondary-800 text-xs font-medium rounded-full border border-secondary-200"
-          >
-            {efeito}
-          </span>
-        ))}
-        {efeitosMedicinais?.length > 3 && (
-          <span className="px-2 py-1 bg-neutral-100 text-neutral-600 text-xs font-medium rounded-full border border-neutral-200">
-            +{efeitosMedicinais.length - 3}
-          </span>
+
+      {/* conteúdo */}
+
+      <div className="p-5">
+
+        <h3 className="text-xl font-bold text-neutral-900 mb-1">
+
+          {nome}
+
+        </h3>
+
+        {nome_cientifico && (
+
+          <p className="text-sm italic text-neutral-500 mb-4">
+
+            {nome_cientifico}
+
+          </p>
+
         )}
+
+        <div className="flex flex-wrap gap-2">
+
+          {efeitosMedicinais
+            ?.slice(0, 3)
+            .map((efeito, index) => (
+
+              <span
+                key={index}
+                className="
+                  px-3
+                  py-1
+                  rounded-full
+                  bg-green-100
+                  text-[#0d4f28]
+                  text-xs
+                  font-medium
+                "
+              >
+
+                {efeito.trim()}
+
+              </span>
+
+            ))}
+
+          {efeitosMedicinais.length > 3 && (
+
+            <span
+              className="
+                px-3
+                py-1
+                rounded-full
+                bg-neutral-100
+                text-neutral-600
+                text-xs
+                font-medium
+              "
+            >
+
+              +{efeitosMedicinais.length - 3}
+
+            </span>
+
+          )}
+
+        </div>
+
       </div>
+
     </motion.article>
+
   );
+
 };
 
 export default PlantaCard;
