@@ -19,45 +19,20 @@ import { Pagination, Autoplay, EffectCards } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-cards';
-
-//comentando a api para resolver problema de requisições falhas 
-// import { useEffect, useState } from 'react';
-// import api from '../services/api';
+import { useEffect, useState } from 'react';
+import api from '../services/api';
 
 const servicos = [
   { icon: Stethoscope, titulo: 'Consultas Médicas', descricao: 'Atendimento clínico geral e especializado', bg: 'bg-blue-100', text: 'text-blue-600', bgGradient: 'bg-gradient-to-b from-orange-400 to-rose-500' },
   { icon: Heart, titulo: 'Saúde da Família', descricao: 'Acompanhamento integral da saúde familiar', bg: 'bg-rose-100', text: 'text-rose-600', bgGradient: 'bg-gradient-to-b from-emerald-400 to-green-600' },
   { icon: Users, titulo: 'Grupos de Apoio', descricao: 'Atividades em grupo para promoção de saúde', bg: 'bg-purple-100', text: 'text-purple-600', bgGradient: 'bg-gradient-to-b from-amber-400 to-orange-500' },
-  { icon: Leaf, titulo: 'Horta Medicinal', descricao: 'Plantas medicinais cultivadas na UBS', bg: 'bg-green-100', text: 'text-green-600', bgGradient: 'bg-gradient-to-b from-teal-400 to-emerald-600' },
+  { icon: Leaf, titulo: 'Horta', descricao: 'Plantas medicinais cultivadas na UBS', bg: 'bg-green-100', text: 'text-green-600', bgGradient: 'bg-gradient-to-b from-teal-400 to-emerald-600' },
 ];
 
 const Home = () => {
 
-    //dados fakes, remover dps
-  const publicacoesRecentes = [
-  {
-    publicacao_id: 1,
-    titulo: 'Campanha de Vacinação',
-    resumo: 'Participe da campanha de vacinação da UBS.',
-    imagem_url: 'https://placehold.co/600x400',
-    data_publicacao: '2026-05-27'
-  },
-  {
-    publicacao_id: 2,
-    titulo: 'Grupo de Apoio',
-    resumo: 'Novo grupo de apoio disponível para a comunidade.',
-    imagem_url: 'https://placehold.co/600x400',
-    data_publicacao: '2026-05-26'
-  },
-  {
-    publicacao_id: 3,
-    titulo: 'Horta Medicinal',
-    resumo: 'Conheça as novas plantas medicinais da UBS.',
-    imagem_url: 'https://placehold.co/600x400',
-    data_publicacao: '2026-05-25'
-  }
-];
-  /* const [publicacoesRecentes, setPublicacoesRecentes] = useState([]);
+
+  const [publicacoesRecentes, setPublicacoesRecentes] = useState([]);
   useEffect(() => {
 
   async function carregarPublicacoes() {
@@ -76,7 +51,8 @@ const Home = () => {
 
   carregarPublicacoes()
 
-}, []) */
+}, []) 
+
   return (
     <main>
       {/* Banner Principal - MANTIDO INTACTO */}
@@ -84,8 +60,8 @@ const Home = () => {
         title="Cuidando da Saúde da Nossa Comunidade"
         subtitle="A UBS 8 Taguatinga oferece atendimento humanizado e de qualidade para você e sua família."
         image={banner_teste}
-        primaryAction={{ to: '/horarios', label: 'Ver Horários' }}
-        secondaryAction={{ to: '/sobre', label: 'Conheça a UBS' }}
+        primaryAction={{ to: '/Sobre', label: 'Conhecer a UBS' }}
+        secondaryAction={{ to: '/Horta', label: 'Acessar horta' }}
       />
 
       {/* BARRA DE INFORMAÇÕES FLUTUANTE (Sobrepondo o banner) */}
@@ -222,7 +198,7 @@ const Home = () => {
             <div className="flex-1">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-secondary-100 rounded-full mb-4">
                 <Leaf className="w-4 h-4 text-secondary-600" />
-                <span className="text-sm font-medium text-secondary-700">Horta Medicinal</span>
+                <span className="text-sm font-medium text-secondary-700">Horta </span>
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-4">
                 Conheça Nossa Horta de Plantas Medicinais

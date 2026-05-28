@@ -9,6 +9,7 @@ import Projetos from './pages/Projetos';
 import Horta from './pages/Horta';
 import Publicacoes from './pages/Publicacoes';
 import Contato from './pages/Contato';
+import PublicacaoDetalhe from './pages/PublicacaoDetalhe';
 
 // Páginas admin
 import Login from './pages/admin/Login';
@@ -37,7 +38,15 @@ function App() {
         <Route path="/horta" element={<PublicLayout><Horta /></PublicLayout>} />
         <Route path="/publicacoes" element={<PublicLayout><Publicacoes /></PublicLayout>} />
         <Route path="/contato" element={<PublicLayout><Contato /></PublicLayout>} />
-
+        <Route 
+          path="/publicacoes/:id" 
+          element={
+            <PublicLayout>
+            <PublicacaoDetalhe />
+          </PublicLayout>
+        } 
+        />
+        
         {/* Rotas Admin */}
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin" element={<AdminLayout />}>
