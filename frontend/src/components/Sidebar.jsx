@@ -11,7 +11,7 @@ import {
 const Sidebar = ({ onLogout }) => {
   const menuItems = [
     { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
-    { to: '/admin/criar-post', icon: PlusCircle, label: 'Nova Publicação' },
+    { to: '/admin/criar-post', icon: PlusCircle, label: 'Gerenciar Publicação' },
     { to: '/admin/horta', icon: Leaf, label: 'Gerenciar Horta' },
   ];
 
