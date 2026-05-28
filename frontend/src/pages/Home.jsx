@@ -13,7 +13,7 @@ import {
 import Banner from '../components/Banner';
 import PostCard from '../components/PostCard';
 import Button from '../components/Button';
-import ubs8_banner from '../assets/ubs8_banner.png';
+import banner_teste from '../assets/banner_teste.png';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay, EffectCards } from 'swiper/modules';
 import 'swiper/css';
@@ -83,7 +83,7 @@ const Home = () => {
       <Banner
         title="Cuidando da Saúde da Nossa Comunidade"
         subtitle="A UBS 8 Taguatinga oferece atendimento humanizado e de qualidade para você e sua família."
-        image={ubs8_banner}
+        image={banner_teste}
         primaryAction={{ to: '/horarios', label: 'Ver Horários' }}
         secondaryAction={{ to: '/sobre', label: 'Conheça a UBS' }}
       />
