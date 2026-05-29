@@ -13,6 +13,10 @@ from app.database.deps import get_db
 
 from app.models.publicacao_model import Publicacao
 
+from app.schemas.publicacao_schema import (
+    PublicacaoResponse
+)
+
 import shutil
 import os
 
@@ -29,15 +33,23 @@ os.makedirs(
 )
 
 
-@router.get("/")
+@router.get(
+    "/",
+    response_model=list[PublicacaoResponse]
+)
 def get_publicacoes(
     db: Session = Depends(get_db)
 ):
 
-    return db.query(Publicacao).all()
+    return db.query(Publicacao).order_by(
+        Publicacao.criado_em.desc()
+    ).all()
 
 
-@router.get("/{id}")
+@router.get(
+    "/{id}",
+    response_model=PublicacaoResponse
+)
 def buscar_publicacao(
     id: int,
     db: Session = Depends(get_db)
@@ -57,7 +69,10 @@ def buscar_publicacao(
     return publicacao
 
 
-@router.post("/")
+@router.post(
+    "/",
+    response_model=PublicacaoResponse
+)
 async def create_publicacao(
 
     titulo: str = Form(...),
@@ -89,7 +104,7 @@ async def create_publicacao(
                 buffer
             )
 
-        imagem_url = caminho_imagem
+        imagem_url = f"http://localhost:8000/{caminho_imagem}"
 
     nova_publicacao = Publicacao(
 
@@ -97,7 +112,8 @@ async def create_publicacao(
         resumo=resumo,
         conteudo=conteudo,
         categoria=categoria,
-        imagem_url=imagem_url
+        imagem_url=imagem_url,
+        admin_id=1
 
     )
 
@@ -110,7 +126,10 @@ async def create_publicacao(
     return nova_publicacao
 
 
-@router.put("/{id}")
+@router.put(
+    "/{id}",
+    response_model=PublicacaoResponse
+)
 async def atualizar_publicacao(
 
     id: int,
@@ -169,7 +188,7 @@ async def atualizar_publicacao(
                 buffer
             )
 
-        publicacao.imagem_url = caminho_imagem
+        publicacao.imagem_url = f"http://localhost:8000/{caminho_imagem}"
 
     db.commit()
 

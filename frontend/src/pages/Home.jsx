@@ -106,7 +106,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Nossas Frentes de Cuidado - MANTIDO EXATAMENTE COMO VOCÊ PEDIU */}
       <section className="py-8 bg-neutral-50">
         <div className="container-ubs">
           <div className="text-center mb-10">
@@ -169,13 +168,16 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {publicacoesRecentes.map((post) => (
+            {publicacoesRecentes
+              .slice(0, 3)
+              .map((post) => (
               <PostCard
                 key={post.publicacao_id}
                 post={{
                 ...post,
                 imagem: post.imagem_url,
-                id: post.publicacao_id
+                id: post.publicacao_id,
+                criado_em: post.criado_em
                 }}
               />
             ))}
