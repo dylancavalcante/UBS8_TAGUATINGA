@@ -6,7 +6,6 @@ import Button from '../../components/Button';
 import api from '../../services/api';
 
 const estatisticas = [
-  { titulo: 'Publicações', valor: 0, icone: FileText, cor: 'bg-primary-100 text-primary-500' },
   { titulo: 'Visualizações', valor: 0, icone: Eye, cor: 'bg-secondary-100 text-secondary-500' },
   { titulo: 'Plantas Cadastradas', valor: 1, icone: Leaf, cor: 'bg-orange-100 text-orange-500' },
   { titulo: 'Visitantes/Mês', valor: 0, icone: Users, cor: 'bg-purple-100 text-purple-500' },
@@ -65,15 +64,6 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
-
-      {/* Publicações Recentes */}
-      <div className="card">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-neutral-900">Publicações Recentes</h2>
-          <Link to="/admin/posts" className="text-sm text-primary-500 hover:text-primary-600">
-            Ver todas
-          </Link>
-        </div>
         
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -115,8 +105,7 @@ const Dashboard = () => {
           </table>
         </div>
       </div>
-    </div>
-  );
+  )
 };
 
 export default Dashboard;

@@ -13,20 +13,25 @@ import {
 import Banner from '../components/Banner';
 import PostCard from '../components/PostCard';
 import Button from '../components/Button';
-import ubs8_banner from '../assets/ubs8_banner.png';
+import banner_teste from '../assets/banner_teste.png';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay, EffectCards } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-cards';
 import { useEffect, useState } from 'react';
 import api from '../services/api';
 
-
-// Adicionamos as propriedades bg e text para os serviços!
 const servicos = [
-  { icon: Stethoscope, titulo: 'Consultas Médicas', descricao: 'Atendimento clínico geral e especializado', bg: 'bg-blue-100', text: 'text-blue-600' },
-  { icon: Heart, titulo: 'Saúde da Família', descricao: 'Acompanhamento integral da saúde familiar', bg: 'bg-rose-100', text: 'text-rose-600' },
-  { icon: Users, titulo: 'Grupos de Apoio', descricao: 'Atividades em grupo para promoção de saúde', bg: 'bg-purple-100', text: 'text-purple-600' },
-  { icon: Leaf, titulo: 'Horta Medicinal', descricao: 'Plantas medicinais cultivadas na UBS', bg: 'bg-green-100', text: 'text-green-600' },
+  { icon: Stethoscope, titulo: 'Consultas Médicas', descricao: 'Atendimento clínico geral e especializado', bg: 'bg-blue-100', text: 'text-blue-600', bgGradient: 'bg-gradient-to-b from-orange-400 to-rose-500' },
+  { icon: Heart, titulo: 'Saúde da Família', descricao: 'Acompanhamento integral da saúde familiar', bg: 'bg-rose-100', text: 'text-rose-600', bgGradient: 'bg-gradient-to-b from-emerald-400 to-green-600' },
+  { icon: Users, titulo: 'Grupos de Apoio', descricao: 'Atividades em grupo para promoção de saúde', bg: 'bg-purple-100', text: 'text-purple-600', bgGradient: 'bg-gradient-to-b from-amber-400 to-orange-500' },
+  { icon: Leaf, titulo: 'Horta', descricao: 'Plantas medicinais cultivadas na UBS', bg: 'bg-green-100', text: 'text-green-600', bgGradient: 'bg-gradient-to-b from-teal-400 to-emerald-600' },
 ];
 
 const Home = () => {
+
+
   const [publicacoesRecentes, setPublicacoesRecentes] = useState([]);
   useEffect(() => {
 
@@ -46,88 +51,99 @@ const Home = () => {
 
   carregarPublicacoes()
 
-}, [])
+}, []) 
+
   return (
     <main>
-      {/* Banner Principal */}
+      {/* Banner Principal - MANTIDO INTACTO */}
       <Banner
         title="Cuidando da Saúde da Nossa Comunidade"
         subtitle="A UBS 8 Taguatinga oferece atendimento humanizado e de qualidade para você e sua família."
-        image={ubs8_banner}
-        primaryAction={{ to: '/horarios', label: 'Ver Horários' }}
-        secondaryAction={{ to: '/sobre', label: 'Conheça a UBS' }}
+        image={banner_teste}
+        primaryAction={{ to: '/Sobre', label: 'Conhecer a UBS' }}
+        secondaryAction={{ to: '/Horta', label: 'Acessar horta' }}
       />
 
-      {/* Informações Rápidas */}
-      <section className="bg-white py-8 shadow-sm">
-        <div className="container-ubs">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                <Clock className="w-6 h-6 text-primary-500" />
-              </div>
-              <div>
-                <p className="font-medium text-neutral-900">Horário de Funcionamento</p>
-                <p className="text-sm text-neutral-600">Seg-Sex: 07h-19h | Sáb: 07h-12h </p>
-              </div>
+      {/* BARRA DE INFORMAÇÕES FLUTUANTE (Sobrepondo o banner) */}
+      <section className="relative z-20 -mt-12 mb-16 container-ubs px-4">
+        {/* Alterado rounded-full para rounded-3xl para corrigir o bug de alinhamento e as pontas cortadas */}
+        <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6 border border-neutral-100 max-w-5xl mx-auto">
+          
+          <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-start">
+            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
+              <Clock className="w-6 h-6 text-blue-600" />
             </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-secondary-100 rounded-lg flex items-center justify-center">
-                <Phone className="w-6 h-6 text-secondary-500" />
-              </div>
-              <div>
-                <p className="font-medium text-neutral-900">Telefone</p>
-                <p className="text-sm text-neutral-600">(61) 3475-2912</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                <MapPin className="w-6 h-6 text-orange-500" />
-              </div>
-              <div>
-                <p className="font-medium text-neutral-900">Endereço</p>
-                <p className="text-sm text-neutral-600">Taguatinga Norte QNL 24 - Taguatinga, Brasília - DF, 72161-409</p>
-              </div>
+            <div className="text-center md:text-left flex flex-col justify-center">
+              <p className="font-bold text-blue-600 text-base">Horário</p>
+              <p className="text-sm text-neutral-600">Seg-Sex: 07h-19h | Sáb: 07h-12h</p>
             </div>
           </div>
+          
+          <div className="hidden md:block w-px h-12 bg-neutral-200"></div>
+          
+          <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-start">
+            <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center shrink-0">
+              <Phone className="w-6 h-6 text-emerald-600" />
+            </div>
+            <div className="text-center md:text-left flex flex-col justify-center">
+              <p className="font-bold text-emerald-600 text-base">Telefone</p>
+              <p className="text-sm text-neutral-600">(61) 3475-2912</p>
+            </div>
+          </div>
+
+          <div className="hidden md:block w-px h-12 bg-neutral-200"></div>
+          
+          <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-start">
+            <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center shrink-0">
+              <MapPin className="w-6 h-6 text-orange-600" />
+            </div>
+            <div className="text-center md:text-left flex flex-col justify-center">
+              <p className="font-bold text-orange-600 text-base">Endereço</p>
+              <p className="text-sm text-neutral-600">QNL 24 - Taguatinga Norte</p>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      {/* Nossos Serviços */}
-      <section className="py-16 bg-neutral-50">
+      <section className="py-8 bg-neutral-50">
         <div className="container-ubs">
-          <div className="text-center mb-12">
+          <div className="text-center mb-10">
             <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-3">
-              Atividades da equipe Multiprofissional
+              Nossas Frentes de Cuidado
             </h2>
-            <p className="text-neutral-600 max-w-2xl mx-auto">
-              Oferecemos uma variedade de atividades de saúde para atender às necessidades da comunidade.
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            spaceBetween={24}
+            slidesPerView={1}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 4 },
+            }}
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 3500, disableOnInteraction: false }}
+            className="pb-16 px-2"
+          >
             {servicos.map((servico, index) => (
-              <div key={index} className="card text-center hover:shadow-md transition-shadow">
-                {/* Aplicamos as cores dinâmicas aqui! */}
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 ${servico.bg}`}>
-                  <servico.icon className={`w-7 h-7 ${servico.text}`} />
+              <SwiperSlide key={index} className="h-auto">
+                {/* Cards Coloridos do Design 
+                  Usando os gradientes definidos no array para dar o visual de identidade forte
+                */}
+                <div className={`${servico.bgGradient} text-white h-[260px] rounded-3xl p-6 flex flex-col items-center text-center shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-grab active:cursor-grabbing`}>
+                  
+                  <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 mt-2 shadow-inner">
+                    <servico.icon className="w-10 h-10 text-white" />
+                  </div>
+                  
+                  <h3 className="font-bold text-lg mb-2 leading-tight">{servico.titulo}</h3>
+                  <p className="text-white/90 text-sm leading-relaxed px-2">{servico.descricao}</p>
+                
                 </div>
-                <h3 className="font-semibold text-neutral-900 mb-2">{servico.titulo}</h3>
-                <p className="text-sm text-neutral-600">{servico.descricao}</p>
-              </div>
+              </SwiperSlide>
             ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <Link to="/projetos">
-              <Button variant="outline">
-                Ver Todos os Projetos
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-          </div>
+          </Swiper>
         </div>
       </section>
 
@@ -152,13 +168,16 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {publicacoesRecentes.map((post) => (
+            {publicacoesRecentes
+              .slice(0, 3)
+              .map((post) => (
               <PostCard
                 key={post.publicacao_id}
                 post={{
                 ...post,
                 imagem: post.imagem_url,
-                id: post.publicacao_id
+                id: post.publicacao_id,
+                criado_em: post.criado_em
                 }}
               />
             ))}
@@ -181,7 +200,7 @@ const Home = () => {
             <div className="flex-1">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-secondary-100 rounded-full mb-4">
                 <Leaf className="w-4 h-4 text-secondary-600" />
-                <span className="text-sm font-medium text-secondary-700">Horta Medicinal</span>
+                <span className="text-sm font-medium text-secondary-700">Horta </span>
               </div>
               <h2 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-4">
                 Conheça Nossa Horta de Plantas Medicinais

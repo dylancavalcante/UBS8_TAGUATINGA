@@ -9,6 +9,7 @@ import Projetos from './pages/Projetos';
 import Horta from './pages/Horta';
 import Publicacoes from './pages/Publicacoes';
 import Contato from './pages/Contato';
+import PublicacaoDetalhe from './pages/PublicacaoDetalhe';
 
 // Páginas admin
 import Login from './pages/admin/Login';
@@ -16,6 +17,7 @@ import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import CriarPost from './pages/admin/CriarPost';
 import GerenciarHorta from './pages/admin/GerenciarHorta';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Layout público
 const PublicLayout = ({ children }) => (
@@ -37,6 +39,14 @@ function App() {
         <Route path="/horta" element={<PublicLayout><Horta /></PublicLayout>} />
         <Route path="/publicacoes" element={<PublicLayout><Publicacoes /></PublicLayout>} />
         <Route path="/contato" element={<PublicLayout><Contato /></PublicLayout>} />
+        <Route 
+          path="/publicacoes/:id" 
+          element={
+            <PublicLayout>
+            <PublicacaoDetalhe />
+          </PublicLayout>
+        } 
+        />
 
         {/* Rotas Admin */}
         <Route path="/admin/login" element={<Login />} />
