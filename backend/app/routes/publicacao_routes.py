@@ -8,18 +8,14 @@ from fastapi import (
 )
 
 from sqlalchemy.orm import Session
-
 from app.database.deps import get_db
-
 from app.models.publicacao_model import Publicacao
 from app.core.security import verificar_token
-
-from app.schemas.publicacao_schema import (
-    PublicacaoResponse
-)
+from app.schemas.publicacao_schema import PublicacaoResponse
 
 import shutil
 import os
+import uuid
 
 router = APIRouter(
     prefix="/publicacoes",
@@ -27,41 +23,27 @@ router = APIRouter(
 )
 
 UPLOAD_DIR = "uploads/publicacoes"
-
-os.makedirs(
-    UPLOAD_DIR,
-    exist_ok=True
-)
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-@router.get(
-    "/",
-    response_model=list[PublicacaoResponse]
-)
-def get_publicacoes(
-    db: Session = Depends(get_db)
-):
+# 🔥 LISTAR
+@router.get("/", response_model=list[PublicacaoResponse])
+def get_publicacoes(db: Session = Depends(get_db)):
 
     return db.query(Publicacao).order_by(
         Publicacao.criado_em.desc()
     ).all()
 
 
-@router.get(
-    "/{id}",
-    response_model=PublicacaoResponse
-)
-def buscar_publicacao(
-    id: int,
-    db: Session = Depends(get_db)
-):
+# 🔥 BUSCAR POR ID
+@router.get("/{id}", response_model=PublicacaoResponse)
+def buscar_publicacao(id: int, db: Session = Depends(get_db)):
 
     publicacao = db.query(Publicacao).filter(
         Publicacao.publicacao_id == id
     ).first()
 
     if not publicacao:
-
         raise HTTPException(
             status_code=404,
             detail="Publicação não encontrada"
@@ -70,82 +52,65 @@ def buscar_publicacao(
     return publicacao
 
 
-@router.post(
-    "/",
-    response_model=PublicacaoResponse
-)
+# 🔥 CRIAR PUBLICAÇÃO (UPLOAD REAL)
+@router.post("/", response_model=PublicacaoResponse)
 async def create_publicacao(
 
     titulo: str = Form(...),
-    usuario = Depends(verificar_token),
     resumo: str = Form(...),
     conteudo: str = Form(...),
     categoria: str = Form(...),
 
+    usuario = Depends(verificar_token),
+
     imagem: UploadFile = File(None),
 
     db: Session = Depends(get_db)
-
 ):
 
     imagem_url = None
 
     if imagem:
+        nome_arquivo = f"{uuid.uuid4()}_{imagem.filename}"
+        caminho_imagem = os.path.join(UPLOAD_DIR, nome_arquivo)
 
-        caminho_imagem = (
-            f"{UPLOAD_DIR}/{imagem.filename}"
-        )
+        with open(caminho_imagem, "wb") as buffer:
+            shutil.copyfileobj(imagem.file, buffer)
 
-        with open(
-            caminho_imagem,
-            "wb"
-        ) as buffer:
-
-            shutil.copyfileobj(
-                imagem.file,
-                buffer
-            )
-
-        imagem_url = f"http://localhost:8000/{caminho_imagem}"
+        # 🔥 URL pública correta (Railway/Vercel friendly)
+        imagem_url = f"/{caminho_imagem}".replace("\\", "/")
 
     nova_publicacao = Publicacao(
-
         titulo=titulo,
         resumo=resumo,
         conteudo=conteudo,
         categoria=categoria,
         imagem_url=imagem_url,
         admin_id=1
-
     )
 
     db.add(nova_publicacao)
-
     db.commit()
-
     db.refresh(nova_publicacao)
 
     return nova_publicacao
 
 
-@router.put(
-    "/{id}",
-    response_model=PublicacaoResponse
-)
+# 🔥 UPDATE
+@router.put("/{id}", response_model=PublicacaoResponse)
 async def atualizar_publicacao(
 
     id: int,
-    usuario = Depends(verificar_token),
-
     titulo: str = Form(...),
     resumo: str = Form(...),
     conteudo: str = Form(...),
     categoria: str = Form(...),
 
+    usuario = Depends(verificar_token),
+
     imagem: UploadFile = File(None),
 
     db: Session = Depends(get_db)
-
 ):
 
     publicacao = db.query(Publicacao).filter(
@@ -153,7 +118,6 @@ async def atualizar_publicacao(
     ).first()
 
     if not publicacao:
-
         raise HTTPException(
             status_code=404,
             detail="Publicação não encontrada"
@@ -164,79 +128,51 @@ async def atualizar_publicacao(
     publicacao.conteudo = conteudo
     publicacao.categoria = categoria
 
+    # 🔥 atualizar imagem
     if imagem:
 
-        if (
-            publicacao.imagem_url
-            and os.path.exists(
-                publicacao.imagem_url
-            )
-        ):
+        if publicacao.imagem_url:
+            old_path = publicacao.imagem_url.lstrip("/")
 
-            os.remove(
-                publicacao.imagem_url
-            )
+            if os.path.exists(old_path):
+                os.remove(old_path)
 
-        caminho_imagem = (
-            f"{UPLOAD_DIR}/{imagem.filename}"
-        )
+        nome_arquivo = f"{uuid.uuid4()}_{imagem.filename}"
+        caminho_imagem = os.path.join(UPLOAD_DIR, nome_arquivo)
 
-        with open(
-            caminho_imagem,
-            "wb"
-        ) as buffer:
+        with open(caminho_imagem, "wb") as buffer:
+            shutil.copyfileobj(imagem.file, buffer)
 
-            shutil.copyfileobj(
-                imagem.file,
-                buffer
-            )
-
-        publicacao.imagem_url = f"http://localhost:8000/{caminho_imagem}"
+        publicacao.imagem_url = f"/{caminho_imagem}".replace("\\", "/")
 
     db.commit()
-
     db.refresh(publicacao)
 
     return publicacao
 
 
+# 🔥 DELETE
 @router.delete("/{id}")
-def deletar_publicacao(
-
-    id: int,
-    usuario = Depends(verificar_token),
-
-    db: Session = Depends(get_db)
-
-):
+def deletar_publicacao(id: int, db: Session = Depends(get_db)):
 
     publicacao = db.query(Publicacao).filter(
         Publicacao.publicacao_id == id
     ).first()
 
     if not publicacao:
-
         raise HTTPException(
             status_code=404,
             detail="Publicação não encontrada"
         )
 
-    if (
-        publicacao.imagem_url
-        and os.path.exists(
-            publicacao.imagem_url
-        )
-    ):
+    # 🔥 remove imagem se existir
+    if publicacao.imagem_url:
+        old_path = publicacao.imagem_url.lstrip("/")
 
-        os.remove(
-            publicacao.imagem_url
-        )
+        if os.path.exists(old_path):
+            os.remove(old_path)
 
     db.delete(publicacao)
-
     db.commit()
 
-    return {
-        "mensagem":
-        "Publicação deletada com sucesso"
-    }
+    return {"mensagem": "Publicação deletada com sucesso"}
