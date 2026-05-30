@@ -17,6 +17,7 @@ import AdminLayout from './pages/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import CriarPost from './pages/admin/CriarPost';
 import GerenciarHorta from './pages/admin/GerenciarHorta';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Layout público
 const PublicLayout = ({ children }) => (
@@ -46,7 +47,7 @@ function App() {
           </PublicLayout>
         } 
         />
-        
+
         {/* Rotas Admin */}
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin" element={<AdminLayout />}>

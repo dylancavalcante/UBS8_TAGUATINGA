@@ -96,95 +96,154 @@ const GerenciarHorta = () => {
 
   const handleSubmit = async (e) => {
 
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
+  try {
 
-      const dados = new FormData();
+    const token = localStorage.getItem(
+      'admin_token'
+    );
 
-      dados.append('nome', formData.nome);
+    const dados = new FormData();
+
+    dados.append('nome', formData.nome);
+
+    dados.append(
+      'nome_cientifico',
+      formData.nome_cientifico
+    );
+
+    dados.append(
+      'descricao',
+      formData.descricao
+    );
+
+    dados.append(
+      'modo_de_uso',
+      formData.modo_de_uso
+    );
+
+    dados.append(
+      'contraindicacoes',
+      formData.contraindicacoes
+    );
+
+    dados.append(
+      'efeitos',
+      formData.efeitos
+    );
+
+    if (formData.imagem) {
 
       dados.append(
-        'nome_cientifico',
-        formData.nome_cientifico
-      );
-
-      dados.append(
-        'descricao',
-        formData.descricao
-      );
-
-      dados.append(
-        'modo_de_uso',
-        formData.modo_de_uso
-      );
-
-      dados.append(
-        'contraindicacoes',
-        formData.contraindicacoes
-      );
-
-      dados.append(
-        'efeitos',
-        formData.efeitos
-      );
-
-      if (formData.imagem) {
-
-        dados.append(
-          'imagem',
-          formData.imagem
-        );
-
-      }
-
-      await api.post('/horta', dados, {
-
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-
-      });
-
-      await carregarPlantas();
-
-      setModalAberto(false);
-
-    } catch (error) {
-
-      console.error(
-        'Erro ao cadastrar planta:',
-        error
+        'imagem',
+        formData.imagem
       );
 
     }
 
-  };
+    if (plantaEditando) {
+
+      await api.put(
+
+        `/horta/${plantaEditando.horta_id}`,
+
+        dados,
+
+        {
+          headers: {
+
+            Authorization:
+              `Bearer ${token}`,
+
+            'Content-Type':
+              'multipart/form-data'
+
+          }
+        }
+
+      );
+
+    } else {
+
+      await api.post(
+
+        '/horta/',
+
+        dados,
+
+        {
+          headers: {
+
+            Authorization:
+              `Bearer ${token}`,
+
+            'Content-Type':
+              'multipart/form-data'
+
+          }
+        }
+
+      );
+
+    }
+
+    await carregarPlantas();
+
+    setModalAberto(false);
+
+  } catch (error) {
+
+    console.error(
+      'Erro ao cadastrar planta:',
+      error
+    );
+
+  }
+
+};
 
   const excluirPlanta = async (id) => {
 
-    const confirmar = confirm(
-      'Deseja realmente excluir esta planta?'
+  const confirmar = confirm(
+    'Deseja realmente excluir esta planta?'
+  );
+
+  if (!confirmar) return;
+
+  try {
+
+    const token = localStorage.getItem(
+      'admin_token'
     );
 
-    if (!confirmar) return;
+    await api.delete(
 
-    try {
+      `/horta/${id}`,
 
-      await api.delete(`/horta/${id}`);
+      {
+        headers: {
 
-      await carregarPlantas();
+          Authorization:
+            `Bearer ${token}`
 
-    } catch (error) {
+        }
+      }
 
-      console.error(
-        'Erro ao excluir planta:',
-        error
-      );
+    );
 
-    }
+    await carregarPlantas();
 
-  };
+  } catch (error) {
+
+    console.error(
+      'Erro ao excluir planta:',
+      error
+    );
+
+  }
+
+};
 
   return (
     <div>

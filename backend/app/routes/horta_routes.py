@@ -7,6 +7,7 @@ import os
 from fastapi import HTTPException
 from app.database.deps import get_db
 from app.models.horta_model import PublicacaoHorta
+from app.core.security import verificar_token
 
 from app.controllers.horta_controller import (
     criar_planta,
@@ -31,6 +32,7 @@ def get_horta(
 @router.post("/")
 async def create_horta(
 
+    usuario = Depends(verificar_token),
     nome: str = Form(...),
     nome_cientifico: str = Form(...),
     descricao: str = Form(...),
@@ -76,6 +78,7 @@ async def create_horta(
 @router.delete("/{horta_id}")
 def deletar_horta(
     horta_id: int,
+    usuario = Depends(verificar_token),
     db: Session = Depends(get_db)
 ):
 
@@ -112,6 +115,7 @@ def deletar_horta(
 @router.put("/{horta_id}")
 async def editar_horta(
     horta_id: int,
+    usuario = Depends(verificar_token),
     nome: str = Form(...),
     nome_cientifico: str = Form(...),
     descricao: str = Form(...),

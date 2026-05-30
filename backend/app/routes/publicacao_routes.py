@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 from app.database.deps import get_db
 
 from app.models.publicacao_model import Publicacao
+from app.core.security import verificar_token
 
 from app.schemas.publicacao_schema import (
     PublicacaoResponse
@@ -76,6 +77,7 @@ def buscar_publicacao(
 async def create_publicacao(
 
     titulo: str = Form(...),
+    usuario = Depends(verificar_token),
     resumo: str = Form(...),
     conteudo: str = Form(...),
     categoria: str = Form(...),
@@ -133,6 +135,7 @@ async def create_publicacao(
 async def atualizar_publicacao(
 
     id: int,
+    usuario = Depends(verificar_token),
 
     titulo: str = Form(...),
     resumo: str = Form(...),
@@ -201,6 +204,7 @@ async def atualizar_publicacao(
 def deletar_publicacao(
 
     id: int,
+    usuario = Depends(verificar_token),
 
     db: Session = Depends(get_db)
 

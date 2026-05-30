@@ -103,19 +103,38 @@ const GerenciarPublicacoes = () => {
 
   try {
 
+    const token = localStorage.getItem(
+      'admin_token'
+    );
+
     const dados = new FormData();
 
-    dados.append('titulo', formData.titulo);
+    dados.append(
+      'titulo',
+      formData.titulo
+    );
 
-    dados.append('resumo', formData.resumo);
+    dados.append(
+      'resumo',
+      formData.resumo
+    );
 
-    dados.append('conteudo', formData.conteudo);
+    dados.append(
+      'conteudo',
+      formData.conteudo
+    );
 
-    dados.append('categoria', formData.categoria);
+    dados.append(
+      'categoria',
+      formData.categoria
+    );
 
     if (formData.imagem) {
 
-      dados.append('imagem', formData.imagem);
+      dados.append(
+        'imagem',
+        formData.imagem
+      );
 
     }
 
@@ -129,7 +148,13 @@ const GerenciarPublicacoes = () => {
 
         {
           headers: {
-            'Content-Type': 'multipart/form-data'
+
+            Authorization:
+              `Bearer ${token}`,
+
+            'Content-Type':
+              'multipart/form-data'
+
           }
         }
 
@@ -145,7 +170,13 @@ const GerenciarPublicacoes = () => {
 
         {
           headers: {
-            'Content-Type': 'multipart/form-data'
+
+            Authorization:
+              `Bearer ${token}`,
+
+            'Content-Type':
+              'multipart/form-data'
+
           }
         }
 
@@ -158,12 +189,14 @@ const GerenciarPublicacoes = () => {
     setModalAberto(false);
 
     setFormData({
+
       titulo: '',
       resumo: '',
       conteudo: '',
       categoria: '',
       imagem: null
-});
+
+    });
 
   } catch (error) {
 
@@ -172,36 +205,61 @@ const GerenciarPublicacoes = () => {
       error
     );
 
+    if (
+      error.response?.status === 401
+    ) {
+
+      alert(
+        'Sessão expirada. Faça login novamente.'
+      );
+
+    }
+
   }
 
 };
 
   const excluirPublicacao = async (id) => {
 
-    const confirmar = confirm(
-      'Deseja excluir esta publicação?'
+  const confirmar = confirm(
+    'Deseja excluir esta publicação?'
+  );
+
+  if (!confirmar) return;
+
+  try {
+
+    const token = localStorage.getItem(
+      'admin_token'
     );
 
-    if (!confirmar) return;
+    await api.delete(
 
-    try {
+      `/publicacoes/${id}`,
 
-      await api.delete(
-        `/publicacoes/${id}`
-      );
+      {
+        headers: {
 
-      await carregarPublicacoes();
+          Authorization:
+            `Bearer ${token}`
 
-    } catch (error) {
+        }
+      }
 
-      console.error(
-        'Erro ao excluir publicação:',
-        error
-      );
+    );
 
-    }
+    await carregarPublicacoes();
 
-  };
+  } catch (error) {
+
+    console.error(
+      'Erro ao excluir publicação:',
+      error
+    );
+
+  }
+
+};
 
   return (
 
