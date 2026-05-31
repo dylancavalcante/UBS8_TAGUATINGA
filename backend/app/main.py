@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.database.connection import engine
@@ -12,15 +11,16 @@ from app.models.publicacao_model import Publicacao
 from app.models.horta_model import PublicacaoHorta
 
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
 
-# CORS (SÓ UMA VEZ)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",
         "http://localhost:5173",
-        "https://ubs-8-taguatinga.vercel.app"  # CONFIRMA ISSO NO VERCEL
+        "http://localhost:3000",
+        "https://ubs-8-taguatinga.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],

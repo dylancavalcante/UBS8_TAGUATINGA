@@ -23,7 +23,7 @@ const Publicacoes = () => {
 
       try {
 
-        const response = await api.get('/publicacoes');
+        const response = await api.get('/publicacoes/');
 
         setPublicacoes(response.data);
 
