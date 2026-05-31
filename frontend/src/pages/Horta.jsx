@@ -78,9 +78,7 @@ const Horta = () => {
     });
 
   const imagemSelecionada =
-    plantaSelecionada?.imagem_horta_url
-      ? `${API_URL}${plantaSelecionada.imagem_horta_url}`
-      : null;
+    plantaSelecionada?.imagem_horta_url || null;
 
   return (
 

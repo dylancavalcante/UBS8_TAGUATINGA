@@ -7,6 +7,10 @@ from fastapi import (
     Form
 )
 
+import cloudinary.uploader
+
+from app.core.cloudinary_config import *
+
 from sqlalchemy.orm import Session
 from app.database.deps import get_db
 from app.models.publicacao_model import Publicacao
@@ -26,7 +30,7 @@ UPLOAD_DIR = "uploads/publicacoes"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
-# 🔥 LISTAR
+#  LISTAR
 @router.get("/", response_model=list[PublicacaoResponse])
 def get_publicacoes(db: Session = Depends(get_db)):
 
@@ -35,7 +39,7 @@ def get_publicacoes(db: Session = Depends(get_db)):
     ).all()
 
 
-# 🔥 BUSCAR POR ID
+#  BUSCAR POR ID
 @router.get("/{id}", response_model=PublicacaoResponse)
 def buscar_publicacao(id: int, db: Session = Depends(get_db)):
 
@@ -52,7 +56,7 @@ def buscar_publicacao(id: int, db: Session = Depends(get_db)):
     return publicacao
 
 
-# 🔥 CRIAR PUBLICAÇÃO (UPLOAD REAL)
+#  CRIAR PUBLICAÇÃO (UPLOAD REAL)
 @router.post("/", response_model=PublicacaoResponse)
 async def create_publicacao(
 
@@ -77,7 +81,7 @@ async def create_publicacao(
         with open(caminho_imagem, "wb") as buffer:
             shutil.copyfileobj(imagem.file, buffer)
 
-        # 🔥 URL pública correta (Railway/Vercel friendly)
+        #  URL pública correta (Railway/Vercel friendly)
         imagem_url = f"/{caminho_imagem}".replace("\\", "/")
 
     nova_publicacao = Publicacao(
@@ -96,7 +100,7 @@ async def create_publicacao(
     return nova_publicacao
 
 
-# 🔥 UPDATE
+#  UPDATE
 @router.put("/{id}", response_model=PublicacaoResponse)
 async def atualizar_publicacao(
 
@@ -130,19 +134,12 @@ async def atualizar_publicacao(
 
     if imagem:
 
-        if publicacao.imagem_url:
-            old_path = publicacao.imagem_url.lstrip("/")
+        resultado = cloudinary.uploader.upload(
+            imagem.file,
+            folder="publicacoes"
+        )
 
-            if os.path.exists(old_path):
-                os.remove(old_path)
-
-        nome_arquivo = f"{uuid.uuid4()}_{imagem.filename}"
-        caminho_imagem = os.path.join(UPLOAD_DIR, nome_arquivo)
-
-        with open(caminho_imagem, "wb") as buffer:
-            shutil.copyfileobj(imagem.file, buffer)
-
-        publicacao.imagem_url = f"/{caminho_imagem}".replace("\\", "/")
+        publicacao.imagem_url = resultado["secure_url"]
 
     db.commit()
     db.refresh(publicacao)
@@ -150,7 +147,7 @@ async def atualizar_publicacao(
     return publicacao
 
 
-# 🔥 DELETE
+#  DELETE
 @router.delete("/{id}")
 def deletar_publicacao(id: int, db: Session = Depends(get_db)):
 
@@ -164,12 +161,6 @@ def deletar_publicacao(id: int, db: Session = Depends(get_db)):
             detail="Publicação não encontrada"
         )
 
-    # 🔥 remove imagem se existir
-    if publicacao.imagem_url:
-        old_path = publicacao.imagem_url.lstrip("/")
-
-        if os.path.exists(old_path):
-            os.remove(old_path)
 
     db.delete(publicacao)
     db.commit()

@@ -3,6 +3,9 @@ from sqlalchemy.orm import Session
 import shutil
 import uuid
 import os
+import cloudinary.uploader
+
+from app.core.cloudinary_config import *
 
 from fastapi import HTTPException
 from app.database.deps import get_db
@@ -63,10 +66,12 @@ async def create_horta(
             nome_arquivo
         )
 
-        with open(caminho_arquivo, "wb") as buffer:
-            shutil.copyfileobj(imagem.file, buffer)
+        resultado = cloudinary.uploader.upload(
+            imagem.file,
+            folder="horta"
+        )
 
-        imagem_url = f"/uploads/plantas/{nome_arquivo}"
+        imagem_url = resultado["secure_url"]
 
     dados = HortaCreate(
 
@@ -99,17 +104,6 @@ def deletar_horta(
             status_code=404,
             detail="Planta não encontrada"
         )
-
-    # remove imagem do disco
-    if planta.imagem_horta_url:
-
-        caminho_imagem = planta.imagem_horta_url.replace("/", "\\")
-
-        caminho_completo = f".{caminho_imagem}"
-
-        if os.path.exists(caminho_completo):
-
-            os.remove(caminho_completo)
 
     db.delete(planta)
 
@@ -149,10 +143,12 @@ async def editar_horta(
 
         caminho_arquivo = f"uploads/plantas/{nome_arquivo}"
 
-        with open(caminho_arquivo, "wb") as buffer:
-            shutil.copyfileobj(imagem.file, buffer)
+        resultado = cloudinary.uploader.upload(
+            imagem.file,
+            folder="horta"
+        )
 
-        planta.imagem_horta_url = f"/uploads/plantas/{nome_arquivo}"
+        planta.imagem_horta_url = resultado["secure_url"]
 
     planta.nome = nome
     planta.nome_cientifico = nome_cientifico

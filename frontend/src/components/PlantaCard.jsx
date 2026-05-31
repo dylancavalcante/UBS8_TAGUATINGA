@@ -19,10 +19,7 @@ const PlantaCard = ({ planta, onClick }) => {
       ? efeitos.split(',')
       : [];
 
-  const imagemUrl =
-    imagem_horta_url
-      ? `${API_URL}${imagem_horta_url}`
-      : null;
+  const imagemUrl = imagem_horta_url;
 
   return (
 
