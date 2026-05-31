@@ -128,7 +128,6 @@ async def atualizar_publicacao(
     publicacao.conteudo = conteudo
     publicacao.categoria = categoria
 
-    # 🔥 atualizar imagem
     if imagem:
 
         if publicacao.imagem_url:

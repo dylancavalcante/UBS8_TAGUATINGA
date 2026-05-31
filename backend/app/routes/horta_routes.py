@@ -21,6 +21,10 @@ router = APIRouter(
     tags=["Horta"]
 )
 
+UPLOAD_DIR = "uploads/plantas"
+
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
 @router.get("/")
 def get_horta(
     db: Session = Depends(get_db)
@@ -54,7 +58,10 @@ async def create_horta(
 
         nome_arquivo = f"{uuid.uuid4()}.{extensao}"
 
-        caminho_arquivo = f"uploads/plantas/{nome_arquivo}"
+        caminho_arquivo = os.path.join(
+            UPLOAD_DIR,
+            nome_arquivo
+        )
 
         with open(caminho_arquivo, "wb") as buffer:
             shutil.copyfileobj(imagem.file, buffer)
