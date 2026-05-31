@@ -39,7 +39,7 @@ const Home = () => {
 
     try {
 
-      const response = await api.get("/publicacoes")
+      const response = await api.get("/publicacoes/")
 
       setPublicacoesRecentes(response.data)
 

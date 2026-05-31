@@ -19,7 +19,7 @@ def criar_planta(db: Session, dados):
         contraindicacoes=dados.contraindicacoes,
         efeitos=dados.efeitos,
         imagem_horta_url=dados.imagem_horta_url,
-        #admin_id=dados.admin_id
+        admin_id=1
     )
 
     db.add(nova_planta)

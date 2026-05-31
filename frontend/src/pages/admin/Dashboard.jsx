@@ -21,7 +21,7 @@ const Dashboard = () => {
 
       try {
 
-        const response = await api.get("/publicacoes");
+        const response = await api.get("/publicacoes/");
 
         setPublicacoesRecentes(response.data);
 
@@ -80,7 +80,7 @@ const Dashboard = () => {
                 <tr key={pub.publicacao_id}>
                   <td className="py-3 text-neutral-900">{pub.titulo}</td>
                   <td className="py-3 text-neutral-600">
-                    {new Date(pub.data).toLocaleDateString('pt-BR')}
+                    {new Date(pub.criado_em).toLocaleDateString('pt-BR')}
                   </td>
                   <td className="py-3">
                     <span className={`px-2 py-1 text-xs rounded-full ${

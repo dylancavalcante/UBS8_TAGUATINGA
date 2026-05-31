@@ -2,7 +2,9 @@ import axios from 'axios';
 
 const api = axios.create({
 
-  baseURL: 'http://127.0.0.1:8000'
+  baseURL:
+    import.meta.env.VITE_API_URL ||
+    'https://ubs8taguatinga-production.up.railway.app'
 
 });
 
@@ -10,9 +12,10 @@ api.interceptors.request.use(
 
   (config) => {
 
-    const token = localStorage.getItem(
-      'admin_token'
-    );
+    const token =
+      localStorage.getItem(
+        'admin_token'
+      );
 
     if (token) {
 

@@ -1,6 +1,9 @@
 import { Leaf } from 'lucide-react';
-
 import { motion } from 'framer-motion';
+
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  'https://ubs8taguatinga-production.up.railway.app';
 
 const PlantaCard = ({ planta, onClick }) => {
 
@@ -16,15 +19,18 @@ const PlantaCard = ({ planta, onClick }) => {
       ? efeitos.split(',')
       : [];
 
-  // URL COMPLETA DA IMAGEM
-  const imagemUrl = imagem_horta_url
-    ? `http://localhost:8000${imagem_horta_url}`
-    : null;
+  const imagemUrl =
+    imagem_horta_url
+      ? `${API_URL}${imagem_horta_url}`
+      : null;
 
   return (
 
     <motion.article
-      whileHover={{ y: -6 }}
+      whileHover={{
+        y: -6,
+        scale: 1.02
+      }}
       transition={{
         type: 'spring',
         stiffness: 250,
@@ -45,8 +51,6 @@ const PlantaCard = ({ planta, onClick }) => {
       onClick={onClick}
     >
 
-      {/* imagem */}
-
       <div className="relative h-52 bg-secondary-50 overflow-hidden">
 
         {imagemUrl ? (
@@ -58,6 +62,9 @@ const PlantaCard = ({ planta, onClick }) => {
               w-full
               h-full
               object-cover
+              transition-transform
+              duration-500
+              hover:scale-105
             "
           />
 
@@ -73,22 +80,16 @@ const PlantaCard = ({ planta, onClick }) => {
 
       </div>
 
-      {/* conteúdo */}
-
       <div className="p-5">
 
         <h3 className="text-xl font-bold text-neutral-900 mb-1">
-
           {nome}
-
         </h3>
 
         {nome_cientifico && (
 
           <p className="text-sm italic text-neutral-500 mb-4">
-
             {nome_cientifico}
-
           </p>
 
         )}
@@ -96,7 +97,7 @@ const PlantaCard = ({ planta, onClick }) => {
         <div className="flex flex-wrap gap-2">
 
           {efeitosMedicinais
-            ?.slice(0, 3)
+            .slice(0, 3)
             .map((efeito, index) => (
 
               <span
@@ -111,9 +112,7 @@ const PlantaCard = ({ planta, onClick }) => {
                   font-medium
                 "
               >
-
                 {efeito.trim()}
-
               </span>
 
             ))}
@@ -131,9 +130,7 @@ const PlantaCard = ({ planta, onClick }) => {
                 font-medium
               "
             >
-
               +{efeitosMedicinais.length - 3}
-
             </span>
 
           )}
